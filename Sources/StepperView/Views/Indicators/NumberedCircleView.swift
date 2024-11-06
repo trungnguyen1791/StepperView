@@ -21,6 +21,7 @@ public struct NumberedCircleView: View {
     /// flag to tigger animation or not.
     var triggerAnimation:Bool
     /// animation state to render the view
+    var completed: Bool
     @State var animate:Bool = false
     /// loading time for animations
     @Environment(\.loadAnimationTime) var loadingTime
@@ -28,19 +29,20 @@ public struct NumberedCircleView: View {
     ///initilazes `text` ,  `width`, `color` , `delay` and  `triggerAnimation`
     public init(text: String, width: CGFloat = 30.0, color: Color = Colors.teal.rawValue,
                 delay:Double = 0.0,
-                triggerAnimation:Bool = false) {
+                triggerAnimation:Bool = false, completed: Bool = false) {
         self.text = text
         self.width = width
         self.color = color
         self.delay = delay
         self.triggerAnimation = triggerAnimation
+        self.completed = completed
     }
     
     /// provides the content and behavior of this view.
     public var body: some View {
         AnimatedCircle(text: text, width: width, color: color,
                        delay: delay, triggerAnimation: triggerAnimation,
-                       loadingTimer: LoadingTimer(value: loadingTime),
+                       loadingTimer: LoadingTimer(value: loadingTime), completion: completed,
                        animate: $animate)
     }
 }
@@ -115,7 +117,7 @@ struct AnimatedCircle: View {
                             Image(systemName: "checkmark")
                             .resizable()
                             .frame(width: Utils.standardSpacing, height: Utils.standardSpacing, alignment: .center)
-                            .foregroundColor(Colors.teal.rawValue))
+                            .foregroundColor(color))
                 #endif
             } else {
                Circle().frame(width: width, height: width)
@@ -123,5 +125,33 @@ struct AnimatedCircle: View {
                 .overlay(Text(text).foregroundColor(color))
             }
         }
+    }
+}
+
+/// A `View` for hostign text with proper `frame`  `alignment` , `lineLimit` modifiers
+@available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
+public struct TextViewColor: View {
+    /// placeholder for text
+    public var text:String
+    /// variable to hold font type
+    public var font:Font
+    
+    public var color: Color
+    
+    public var numberOfLine: Int
+    /// initilzes `text` and  `font`
+    public init(text:String, font:Font = .caption, color: Color = .black, numberOfLine: Int = 1) {
+        self.text = text
+        self.font = font
+        self.color = color
+        self.numberOfLine = numberOfLine
+    }
+    
+    /// provides the content and behavior of this view.
+    public var body: some View {
+        Text(text)
+            .font(font).foregroundColor(color)
+            .lineLimit(numberOfLine)
+            .padding(.leading, -10)
     }
 }
