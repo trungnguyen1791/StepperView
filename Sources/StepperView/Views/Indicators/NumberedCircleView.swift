@@ -117,7 +117,7 @@ struct AnimatedCircle: View {
                             Image(systemName: "checkmark")
                             .resizable()
                             .frame(width: Utils.standardSpacing, height: Utils.standardSpacing, alignment: .center)
-                            .foregroundColor(Color.white)
+                            .foregroundColor(Color.white))
                 #endif
             } else {
                Circle().frame(width: width, height: width)
